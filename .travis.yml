@@ -16,7 +16,7 @@ script:
   - python3 setup.py install
 
 after_script:
-  - pylint_runner -v ${TRAVIS_BUILD_DIR}/gitvier
+  - pylint_runner -v ${TRAVIS_BUILD_DIR}/gitvier/gitvier
 
 notifications:
   email:
@@ -24,3 +24,13 @@ notifications:
       - matt.peveler@gmail.com
     on_success: change
     on_failure: change
+
+deploy:
+  provider: pypi
+  user: Master_Odin_Bot
+  password:
+    secure: nidh04vj9gJNadHOvt1wZEnt3vSEOE+HG9kHiJ2lQAVqqqVvygv6nXfhqmaMNfT6PyCr4kF1S5v3WTusmh2jwTJiItTMUs5Fkb3u+K+G/oTfY9qHckhRef70KkHR2rlcSteL+ZiZxTNvOzob4DImAo6B/96XMAe10G8TwyKCDNLwzN42nFE6OTMWMP3dZ0uyvnF2sbYerjYBvc/aL3Tp2c4wdM+PxVCaKjt2N74TQf7N/zCjouPi6fRJJ2vWvpe2ZmNTBM4USZaypqB6674uJzF0Xj3y9VqqFjF0rcPrF/jCvV64lYfVbw6gg27es54T9tmWZZ/8tqj0yTtGhSqZxuPysABiEgoPXu7bsJZjrAaqR76ZZvdCnbqzG+5lMB78jT+4OSvlEgTAm5hfXiH3LMBvqNpXvf0TBx0eID+ZrvmsoSff6rVT2pAvkNRzuQp9zEo8TVN8AMYpQPNICYbwSEuWxTbrAotQ//H9OXtH4LH7Xgl8mw9I17z7EVSl0V0YJnD1afSg95BCWwg+ucNytaO+6lVhf/hY3hNKzoOE0YDT59U7VpC0aVkD8KXaRsN8Ss4TdH8Ax0YgDgdObuaB62CVPKiwrIlq1ZP+emIvX/iIRGnFC7SHEtEpt+Zz1Egsu46SRGd/54S3qbijGCWJ/Rs2EPYQxQjEQV8Wz/eBGx4=
+  on:
+    tags: true
+    distributions: sdist bdist_wheel
+    repo: MasterOdin/gitvier
