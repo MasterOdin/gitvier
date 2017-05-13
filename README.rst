@@ -5,18 +5,19 @@ gitvier
 .. image:: https://travis-ci.org/MasterOdin/gitvier.svg?branch=master
     :target: https://travis-ci.org/MasterOdin/gitvier
     :alt: Build Status
-.. image:: https://coveralls.io/repos/MasterOdin/gitvier/badge.svg?branch=master
-    :target: https://coveralls.io/r/MasterOdin/gitvier?branch=master
-    :alt: Coverage Status
 .. image:: https://img.shields.io/pypi/v/gitvier.svg
     :target: https://pypi.python.org/pypi/gitvier/
     :alt: PyPI Version
+.. image:: https://img.shields.io/pypi/status/gitvier.svg
+    :target: https://pypi.python.org/pypi/gitvier
+    :alt: Gitvier Development Status
 .. image:: https://img.shields.io/pypi/pyversions/gitvier.svg
     :target: https://pypi.python.org/pypi/gitvier/
     :alt: Supported Python Versions
 .. image:: https://img.shields.io/github/license/MasterOdin/gitvier.svg
     :target: https://github.com/MasterOdin/gitvier/blob/master/LICENSE
     :alt: License
+
 
 Gitvier is a CLI "component management" tool for when you've got a container repository and then that repository relies
 on a bunch of components to operate, which you're then actively working on those components. As such, it aims to allow
