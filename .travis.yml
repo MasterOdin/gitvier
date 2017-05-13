@@ -1,0 +1,26 @@
+language: python
+sudo: true
+dist: trusty
+
+python:
+  - '3.5'
+  - '3.6'
+
+before_install:
+  - pip3 install -U pip
+
+install:
+  - pip3 install pylint_runner
+
+script:
+  - python3 setup.py install
+
+after_script:
+  - pylint_runner -v ${TRAVIS_BUILD_DIR}/gitvier
+
+notifications:
+  email:
+    recipients:
+      - matt.peveler@gmail.com
+    on_success: change
+    on_failure: change
