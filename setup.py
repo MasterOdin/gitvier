@@ -58,6 +58,7 @@ setuptools.setup(
         'Topic :: System :: Software Distribution'
     ],
     install_requires=[
+        'colorama',
         'GitPython',
         'PyYAML'
     ]

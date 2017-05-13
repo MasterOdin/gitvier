@@ -57,19 +57,24 @@ def main():
     parser = argparse.ArgumentParser(prog=CLI, description=DESCRIPTION)
     parser.add_argument('-V', '--version', action="version", version=VERSION)
     group = parser.add_mutually_exclusive_group()
-    group.add_argument('-v', '--verbose', dest="verbose", action='count', default=0)
-    group.add_argument('-q', '--quiet', dest="verbose", action='store_const', const=-1)
+    group.add_argument('-v', '--verbose', dest="verbose", action='count', default=0,
+                       help="how verbose of output should occur, default is just WARN+, one v "
+                            "for info+, two v for debug+")
+    group.add_argument('-q', '--quiet', dest="verbose", action='store_const', const=-1,
+                       help="only output errors and inputs")
 
     subparsers = parser.add_subparsers(dest='command', metavar='<command>')
-    subparsers.add_parser('init', help='Initialize a new gitvier directory', parents=[force])
+    msg = "create a new gitvier configuration file"
+    subparsers.add_parser('init', description=msg.capitalize() + ".", help=msg, parents=[force])
 
-    subparsers.add_parser('install', help='', parents=[])
+    msg = "install all components specified in config"
+    subparsers.add_parser('install', description=msg.capitalize() + ".", help=msg, parents=[])
 
-    subparsers.add_parser('update', help='', parents=[])
+    msg = "update all installed components if in original branch and not dirty"
+    subparsers.add_parser('update', description=msg.capitalize() + ".", help=msg, parents=[])
 
-    subparsers.add_parser('list', help='')
-
-    subparsers.add_parser('uninstall', help='', parents=[])
+    msg = "list all components, if they're installed, branch they're on and if currently dirty"
+    subparsers.add_parser('list', description=msg.capitalize() + ".", help=msg, parents=[])
 
     namespace = parser.parse_args()
     if namespace.command is None:

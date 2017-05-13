@@ -35,8 +35,9 @@ Dependencies
 
 * Python 3.5+
 * Git
-
-Others?
+* colorama
+* GitPython
+* PyYAML
 
 Installation
 ------------
@@ -55,17 +56,25 @@ Usage
 ::
 
     $ gitvier --help
-    usage: gitvier [-h] [-V] <command> ...
+    usage: gitvier [-h] [-V] [-v | -q] <command> ...
 
-    A component manager based where your components live in Git.
+    A component manager for when your components live in Git.
 
     positional arguments:
       <command>
-        init         Initialize a new gitvier directory
+        init         create a new gitvier configuration file
+        install      install all components specified in config
+        update       update all installed components if in original branch and not
+                     dirty
+        list         list all components, if they're installed, branch they're on
+                     and if currently dirty
 
     optional arguments:
       -h, --help     show this help message and exit
       -V, --version  show program's version number and exit
+      -v, --verbose  how verbose of output should occur, default is just WARN+,
+                     one v for info+, two v for debug+
+      -q, --quiet    only output errors and inputs
 
 Gitvier Config File
 -------------------
@@ -89,6 +98,14 @@ An example of a `.gitvier.yml` file (taken from `Submitty`_)::
     - name: grading
       repo: https://github.com/Submitty/AutoGrading
       rev: master
+
+
+
+License
+-------
+
+Gitvier is licensed under the MIT License, which can be viewed
+`here <https://github.com/MasterOdin/gitvier/blob/master/LICENSE.rst>`_.
 
 .. _Submitty: https://github.com/Submitty/Submitty
 .. _Gitman: https://github.com/jacebrowning/gitman
