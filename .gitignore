@@ -4,3 +4,5 @@ dist/
 *.egg-info/
 .gitvier.yml
 __pycache__/
+/runner.py
+*.py[cod]

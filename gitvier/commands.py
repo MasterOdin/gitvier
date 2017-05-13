@@ -1,8 +1,26 @@
+# -*- coding: utf-8 -*-
+
+import os
+
+from colorama import Fore, init as colorama_init
+from git import Repo
+
 from .common import get_input, get_yes
 from .config import get_config, Config
 from .logger import get_logger
 
 LOGGER = get_logger()
+
+colorama_init(autoreset=True)
+
+
+def restore_directory(func):
+    def func_wrapper(*args, **kwargs):
+        cwd = os.getcwd()
+        result = func(*args, **kwargs)
+        os.chdir(cwd)
+        return result
+    return func_wrapper
 
 
 def init(force=False):
@@ -30,14 +48,49 @@ def init(force=False):
     config.save()
 
 
-def install(force=False, clean=False):
-    pass
+@restore_directory
+def install():
+    config = get_config()
+    base_dir = config.location
+    LOGGER.debug("Directory: {}".format(base_dir))
+    for component in config.components:
+        comp_dir = os.path.join(base_dir, component.name)
+        if os.path.isdir(os.path.join(base_dir, component.name)):
+            repo = Repo(comp_dir)
+            print("Component already installed, on branch {}.".format(repo.active_branch))
+        else:
+            Repo.clone_from(component.repo, comp_dir)
+        os.chdir(comp_dir)
 
 
-def update(force=False, clean=False):
-    pass
+@restore_directory
+def update():
+    config = get_config()
+    base_dir = config.location
+    for component in config.components:
+        print("Updating component {}... ".format(component.name), end="")
+        success = False
+        comp_dir = os.path.join(base_dir, component.name)
+        repo = Repo(comp_dir)
+        if repo.active_branch.name == component.rev:
+            origin = repo.remotes.origin
+            if not repo.is_dirty():
+                origin.pull()
+                success = True
+
+        if success:
+            print(Fore.GREEN + "✔", end="")
+        else:
+            print(Fore.RED + "✘", end="")
+        print()
 
 
 def display():
-    pass
-
+    config = get_config()
+    for component in config.components:
+        comp_dir = os.path.join(config.location, component.name)
+        repo = Repo(comp_dir)
+        print("Status of component {}... ".format(component.name))
+        print("  Branch: {}".format(repo.active_branch.name))
+        print("  Is Dirty: {}".format(repo.is_dirty()))
+        print()

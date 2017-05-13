@@ -9,7 +9,7 @@ import setuptools
 from gitvier import __project__, __version__, __author__, DESCRIPTION
 
 PACKAGE_NAME = "gitvier"
-MINIMUM_PYTHON_VERSION = 3,
+MINIMUM_PYTHON_VERSION = (3, 5)
 
 
 def check_python_version():
@@ -40,7 +40,7 @@ setuptools.setup(
     url='https://github.com/MasterOdin/gitvier',
     packages=setuptools.find_packages(),
     entry_points={'console_scripts': [
-        'gitvier = gitvier.cli:main',
+        'gitvier = gitvier.cli:main'
     ]},
     license='MIT',
     classifiers=[
@@ -55,9 +55,10 @@ setuptools.setup(
         'Topic :: Software Development',
         'Topic :: Software Development :: Build Tools',
         'Topic :: Software Development :: Version Control',
-        'Topic :: System :: Software Distribution',
+        'Topic :: System :: Software Distribution'
     ],
     install_requires=[
-        'PyYAML',
+        'GitPython',
+        'PyYAML'
     ]
 )
