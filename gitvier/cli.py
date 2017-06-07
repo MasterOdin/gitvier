@@ -68,10 +68,10 @@ def main():
     subparsers.add_parser('init', description=msg.capitalize() + ".", help=msg, parents=[force])
 
     msg = "install all components specified in config"
-    subparsers.add_parser('install', description=msg.capitalize() + ".", help=msg, parents=[])
+    subparsers.add_parser('install', description=msg.capitalize() + ".", help=msg, parents=[force])
 
     msg = "update all installed components if in original branch and not dirty"
-    subparsers.add_parser('update', description=msg.capitalize() + ".", help=msg, parents=[])
+    subparsers.add_parser('update', description=msg.capitalize() + ".", help=msg, parents=[force])
 
     msg = "list all components, if they're installed, branch they're on and if currently dirty"
     subparsers.add_parser('list', description=msg.capitalize() + ".", help=msg, parents=[])

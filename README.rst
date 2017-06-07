@@ -31,12 +31,22 @@ to support the usecase of `Submitty`_ and for my research projects.
 This borrows concepts heavily from `GitMan`_ which is a great dependency
 manager with Git, but less useful as a "component manager" (hence the existance of this tool).
 
+Roadmap
+-------
+
+- [x] Install
+- [ ] Update
+- [ ] Branch
+- [ ] Add
+- [ ] Commit
+- [ ] Push
+
 Dependencies
 ------------
 
 * Python 3.5+
 * Git
-* colorama
+* colorama (maybe?)
 * GitPython
 * PyYAML
 
