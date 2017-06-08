@@ -31,7 +31,7 @@ class Config(object):
     """
 
     def __init__(self, config_file=None):
-        self.location = '.'
+        self._location = '.'
         self.components = []  # type: list[Component]
 
         if config_file is not None and os.path.isfile(config_file):
@@ -47,8 +47,13 @@ class Config(object):
         if loaded_config is None:
             return
 
-        if 'location' in loaded_config:
-            self.location = loaded_config['location']
+        if 'location' in loaded_config and len(loaded_config['location'].strip()) > 0:
+            self._location = loaded_config['location'].strip()
+        if self._location[0] != os.path.sep:
+            self.location = os.path.join(os.path.dirname(os.path.realpath(config_file)),
+                                         self._location)
+        else:
+            self.location = self._location
         self.location = os.path.abspath(os.path.expanduser(self.location))
 
         if 'components' in loaded_config and isinstance(loaded_config['components'], list):

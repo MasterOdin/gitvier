@@ -3,7 +3,6 @@
 import argparse
 
 from . import CLI, DESCRIPTION, VERSION, commands
-from .logger import configure_logging
 
 
 def _get_command(namespace):
@@ -56,12 +55,6 @@ def main():
 
     parser = argparse.ArgumentParser(prog=CLI, description=DESCRIPTION)
     parser.add_argument('-V', '--version', action="version", version=VERSION)
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument('-v', '--verbose', dest="verbose", action='count', default=0,
-                       help="how verbose of output should occur, default is just WARN+, one v "
-                            "for info+, two v for debug+")
-    group.add_argument('-q', '--quiet', dest="verbose", action='store_const', const=-1,
-                       help="only output errors and inputs")
 
     subparsers = parser.add_subparsers(dest='command', metavar='<command>')
     msg = "create a new gitvier configuration file"
@@ -80,9 +73,6 @@ def main():
     if namespace.command is None:
         parser.print_help()
         raise SystemExit
-
-    logger = configure_logging(namespace.verbose)
-    logger.debug("Inputted command: {}".format(namespace.command))
 
     command, args, kwargs = _get_command(namespace)
 

@@ -34,12 +34,15 @@ manager with Git, but less useful as a "component manager" (hence the existance 
 Roadmap
 -------
 
+- [x] Init .gitvier.yml file
 - [x] Install
-- [ ] Update
+- [x] List components and status
+- [ ] Pull
 - [ ] Branch
 - [ ] Add
 - [ ] Commit
 - [ ] Push
+- [ ] Improve outputs
 
 Dependencies
 ------------

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import sys
 
 from colorama import Fore, init as colorama_init
 from git import Repo, CheckoutError
@@ -8,9 +9,6 @@ from git.exc import InvalidGitRepositoryError
 
 from .common import get_input, get_yes, call as shell_call, output
 from .config import get_config, Config
-from .logger import get_logger
-
-LOGGER = get_logger()
 
 colorama_init(autoreset=True)
 
@@ -27,7 +25,7 @@ def restore_directory(func):
 def init(force=False):
     config = get_config()
     if config is not None and not force:
-        LOGGER.error(".gitvier.yml file already exists. Use --force to overwrite.")
+        print(".gitvier.yml file already exists. Use --force to overwrite.", file=sys.stderr)
         return
     config = Config()
     config.location = get_input("Location to install components", ".")
@@ -52,10 +50,15 @@ def init(force=False):
 @restore_directory
 def install():
     config = get_config()
+    if config is None:
+        print("Not a valid gitvier instance")
+        return
     base_dir = config.location
     os.makedirs(base_dir, exist_ok=True)
-    LOGGER.info("Directory: {}".format(base_dir))
+    print("Directory: {}".format(base_dir))
     os.chdir(base_dir)
+    output("├ Config loaded: " + config.config_file)
+    output("├ Install Path: " + config.location)
     output("├ Installing Components:")
     count = 0
     for component in config.components:
@@ -95,18 +98,21 @@ def _install(base_dir, component, level=0):
         except InvalidGitRepositoryError:
             output("├── Folder exists for component, but is not git repo", level + 1)
     else:
-        output("├── git clone " + component.repo, level)
+        output("├── git clone {}".format(component.repo, comp_dir), level)
         repo = Repo.clone_from(component.repo, comp_dir)
         _checkout(repo, component, level)
 
+    os.chdir(comp_dir)
     config = get_config(comp_dir)
     if config is not None:
+        output("├── Config loaded: " + config.config_file, level)
+        output("├── Install Path: " + config.location, level)
         output("├─┬ Installing Components:", level)
         count = 0
         for component in config.components:
             if count > 0:
                 output("", 1)
-            _install(comp_dir, component, level)
+            _install(config.location, component, level+1)
 
     os.chdir(comp_dir)
     if len(component.commands) > 0:
@@ -159,12 +165,32 @@ def update():
         print()
 
 
+@restore_directory
 def display():
     output("├ Components Statuses:")
-    config = get_config()
+    _display()
+
+
+def _display(base_dir=None, level=0):
+    config = get_config(base_dir)
+    if config is None:
+        return
+    level += 1
     for component in config.components:
+        output("├─┬ {} ({:s})".format(component.name, component.rev), level-1)
         comp_dir = os.path.join(config.location, component.name)
-        output("├─┬ {} ({:s})".format(component.name, component.rev))
-        repo = Repo(comp_dir)
-        output("├── Branch: {:s}".format(repo.active_branch.name), level=1)
-        output("└── Dirty: {}".format("True" if repo.is_dirty() else "False"), level=1)
+
+        if not os.path.isdir(comp_dir):
+            output("├── Not Installed", level)
+        else:
+            os.chdir(comp_dir)
+            try:
+                repo = Repo(comp_dir)
+                if repo.head.is_detached:
+                    output("├── Revision: {:s}".format(repo.commit(repo.head).hexsha), level)
+                else:
+                    output("├── Branch: {:s}".format(repo.active_branch.name), level)
+                output("├── Dirty: {}".format("True" if repo.is_dirty() else "False"), level)
+                _display(comp_dir, level)
+            except InvalidGitRepositoryError:
+                output("├── Invalid Git repository", level)
